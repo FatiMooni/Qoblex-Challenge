@@ -1,20 +1,18 @@
 ## Thought Process
 
-the problem is straight forward , we want to count total number of products we can build based on number of different pieces avaialable in stock
+The problem at hand is to determine the maximum number of products we can construct based on the availability of different pieces in stock.
 
-let's imagine a product P that is composed out of 2 pieces ( bundles ) B1 and B2, to be able to build a complete model of product P , B1 and B2 pieces need to be available equally, hence :
+let's consider a product P composed of two bundles B1 and B2.
+To assemble a complete P, an equal number of pieces from B1 and B2 must be available.
+Therefore, the number of possible products is limited by the minimum quantity of pieces available for either B1 or B2.
 
-1. number of possible products = min ( number of pieces B1, number of pieces B2)
+Similarly, if another product P' requires one (1) piece from B1 and two (2) pieces from B2, then the number of possible products is constrained by the minimum of the available quantity of B1 pieces divided by 1 and the available quantity of B2 pieces divided by 2.
 
-similaraly , if we had product P' that is built out of one bundle B1 and 2 pieces of B2 then : 2. number of possible products = min ( (number of pieces B1) / 1,(number of pieces B2) / 2)
+We can generalize this approach using recursion:
 
-from 1 and 2, by recurrission :
+For any bundle Bx requiring 'num_req_piece_x' pieces (where 'x' ranges from 1 to 'n'), the maximum number of products (P) we can build is given by:
 
-P = min (Bx / num_req_piece_x)
-Bx : Bundle
-num_req_piece_x : number of required pieces ( 1 ... m)
-x = (1 ... n)
+P = min(B1 / num_req_piece_1, B2 / num_req_piece_2, ......, Bx / num_req_piece_x)
 
-in order to achieve this solution, we gonna represent the product by N-ary tree where root is the P0 or item we aim to build and nodes are different bundles that are used to achieve that. to calculate the total number of bikes to build, I propose a solution based on DFS algorithm (Depth First Search).
-
-for each bundle, we go in depth and count how many pieces we can build based on children (dependent bundles) then we use the local output and compare it with same level bundles to calculate the maximum
+To implement this solution, we represent the product as an N-ary tree, with the root node representing the target product P0.
+the subsequent nodes representing different bundles required for assembly. We utilize a Depth First Search (DFS) algorithm to traverse each bundle, recursively calculating the maximum number of products achievable based on available pieces from dependent bundles. Finally, we compare the local output obtained from each bundle level to determine the overall maximum number of products that can be built.
