@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, UniqueConstraint
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
@@ -8,6 +8,7 @@ from sqlalchemy.orm import sessionmaker
 Base = declarative_base()
 # to load bundles from our DB , we use SQLAlchemy ( python ORM)
 class Bundle(Base): # entity class need to implement Base
+	__tablename__ = 'bundle'
 	
 	id = Column(String, primary_key=True)
 	name = Column(String)
@@ -21,6 +22,28 @@ class Bundle(Base): # entity class need to implement Base
 	
 	def __str__(self):
 		return str(self.name)
+	
+# relational entity
+class BundlePieces(Base):
+    __tablename__ = 'bundle_pieces'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    bundle_id = Column(String, ForeignKey('bundle.id'))
+    parent_bundle_id = Column(String, ForeignKey('bundle.id'))
+    piece_number = Column(Integer, default=1)
+    is_spare_part = Column(Boolean, default=False)
+
+    bundle = relationship("Bundle", foreign_keys=[bundle_id])
+
+    __table_args__ = (
+        UniqueConstraint('bundle_id', 'parent_bundle_id'),
+    )
+
+    def __init__(self, bundle: Bundle, parent_bundle: Bundle = None, piece_number: int = 1, is_spare_part: bool = False):
+        self.bundle = bundle
+        self.parent_bundle = parent_bundle
+        self.piece_number = piece_number
+        self.is_spare_part = is_spare_part
 
 # Product is group of bundles ( we use N-ary tree structure to represent the product)
 class Product:
