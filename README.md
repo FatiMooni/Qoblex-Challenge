@@ -16,3 +16,8 @@ P = min(B1 / num_req_piece_1, B2 / num_req_piece_2, ......, Bx / num_req_piece_x
 
 To implement this solution, we represent the product as an N-ary tree, with the root node representing the target product P0.
 the subsequent nodes representing different bundles required for assembly. We utilize a Depth First Search (DFS) algorithm to traverse each bundle, recursively calculating the maximum number of products achievable based on available pieces from dependent bundles. Finally, we compare the local output obtained from each bundle level to determine the overall maximum number of products that can be built.
+
+# RUN code
+
+cd qoblex_challenge
+python ./bundles.py
